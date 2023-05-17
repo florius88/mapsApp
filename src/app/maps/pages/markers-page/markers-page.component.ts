@@ -7,6 +7,11 @@ interface MarkerAndColor {
   marker: Marker
 }
 
+interface PlainMarker {
+  color: string
+  lngLat: number[]
+}
+
 
 @Component({
   templateUrl: './markers-page.component.html',
@@ -35,6 +40,8 @@ export class MarkersPageComponent {
       center: this.currentLngLat, // starting position [lng, lat]
       zoom: this.zoom, // starting zoom
     });
+
+    this.readFromLocalStorage()
 
     /* Podemos crearnos un elemento Html a nuestro gusto y asignarselo al marker
     const markerHtml = document.createElement('div')
@@ -80,6 +87,7 @@ export class MarkersPageComponent {
       .addTo(this.map)
 
     this.markers.push({ color, marker })
+    this.saveToLocalStorage()
   }
 
   /**
@@ -101,8 +109,38 @@ export class MarkersPageComponent {
    */
   flyTo(marker: Marker) {
     this.map?.flyTo({
-      zoom:14,
+      zoom: 14,
       center: marker.getLngLat()
+    })
+  }
+
+  /** Guardamos en LocalStorage */
+  saveToLocalStorage() {
+    const plainMarkers: PlainMarker[] = this.markers.map(({ color, marker }) => {
+      return {
+        color,
+        lngLat: marker.getLngLat().toArray()
+      }
+    })
+
+    localStorage.setItem('plainMarkers', JSON.stringify(plainMarkers))
+
+  }
+
+  /** Leemos del LocalStorage */
+  readFromLocalStorage() {
+    /* Si no existe, devuelvo un string vacio de esa manera '[]'
+    ya que puede ser serializable */
+    const plainMarkersString = localStorage.getItem('plainMarkers') ?? '[]'
+    //! ¡OJO!
+    /* Esta asignación de tipo e spotencialmente peligrosa,
+    ya que puede venir el objeto sin las propiedades necesarias */
+    const plainMarkers: PlainMarker[] = JSON.parse(plainMarkersString)
+
+    plainMarkers.forEach(({ color, lngLat }) => {
+      const [lng, lat] = lngLat //desestructuramos el objeto
+      const coords = new LngLat(lng, lat)
+      this.addMarker(coords, color)
     })
   }
 
