@@ -31,7 +31,7 @@ export class MarkersPageComponent {
   ngAfterViewInit(): void {
     // console.log(this.divMap);
 
-    if (!this.divMap) throw 'El elemento htm,l no fue encontrado'
+    if (!this.divMap) throw 'El elemento html no fue encontrado'
 
     this.map = new Map({
       /* container: 'map', // container ID */
