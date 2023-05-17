@@ -50,6 +50,9 @@ export class MarkersPageComponent {
 
   }
 
+  /**
+   * Crea un marcador nuevo
+   */
   createMarker() {
     if (!this.map) return
 
@@ -60,6 +63,12 @@ export class MarkersPageComponent {
     this.addMarker(lngLat, color)
   }
 
+  /**
+   * Añade un marcador a la lista de marcadores
+   *
+   * @param lngLat
+   * @param color
+   */
   addMarker(lngLat: LngLat, color: string) {
     if (!this.map) return
 
@@ -73,6 +82,11 @@ export class MarkersPageComponent {
     this.markers.push({ color, marker })
   }
 
+  /**
+   * Elimina un marcador
+   *
+   * @param index índice del marcador a eliminar
+   */
   deleteMarker(index: number) {
     // Eliminamos el marcador
     this.markers[index].marker.remove()
@@ -80,6 +94,11 @@ export class MarkersPageComponent {
     this.markers.splice(index, 1)
   }
 
+  /**
+   * Sitúa el mapa en el punto pasado por parámetro
+   *
+   * @param marker
+   */
   flyTo(marker: Marker) {
     this.map?.flyTo({
       zoom:14,
