@@ -2,6 +2,11 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 
 import { LngLat, Map, Marker } from 'mapbox-gl';
 
+interface MarkerAndColor {
+  color: string
+  marker: Marker
+}
+
 
 @Component({
   templateUrl: './markers-page.component.html',
@@ -15,6 +20,7 @@ export class MarkersPageComponent {
   public zoom: number = 5;
   public map?: Map;
   public currentLngLat: LngLat = new LngLat(-3.7033253741194585, 40.41656431180323);
+  public markers: MarkerAndColor[] = []
 
 
   ngAfterViewInit(): void {
@@ -48,7 +54,7 @@ export class MarkersPageComponent {
     if (!this.map) return
 
     // Nos crea un color en hexadecimal aleatorio
-    const color = '#xxxxxx'.replace(/x/g, y=>(Math.random()*16|0).toString(16))
+    const color = '#xxxxxx'.replace(/x/g, y => (Math.random() * 16 | 0).toString(16))
     const lngLat = this.map.getCenter()
 
     this.addMarker(lngLat, color)
@@ -64,6 +70,15 @@ export class MarkersPageComponent {
       .setLngLat(lngLat)
       .addTo(this.map)
 
+    this.markers.push({ color, marker })
   }
+
+  deleteMarker(index: number) {
+    // Eliminamos el marcador
+    this.markers[index].marker.remove()
+    // Lo eliminamos de la lista
+    this.markers.splice(index, 1)
+  }
+
 
 }
