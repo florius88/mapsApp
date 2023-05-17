@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 
 import { LngLat, Map } from 'mapbox-gl';
 
@@ -7,7 +7,7 @@ import { LngLat, Map } from 'mapbox-gl';
   templateUrl: './zoom-range-page.component.html',
   styleUrls: ['./zoom-range-page.component.css']
 })
-export class ZoomRangePageComponent implements AfterViewInit {
+export class ZoomRangePageComponent implements AfterViewInit, OnDestroy {
 
   // Usamos el ? porque en algún momento es null or undefined
   @ViewChild('map') divMap?: ElementRef;
@@ -33,6 +33,15 @@ export class ZoomRangePageComponent implements AfterViewInit {
     this.mapListeners()
   }
 
+  ngOnDestroy(): void {
+    /* Así lo haríamos si quisieramos borrar un listener en particular */
+    /* this.map?.off('move', (ev) => {
+      this.currentLngLat = this.map!.getCenter()
+    }) */
+    /* Así borramos todos los listeners que tenga el objeto */
+    this.map?.remove()
+  }
+
   mapListeners() {
     if (!this.map) throw 'El mapa no existe'
 
@@ -47,7 +56,8 @@ export class ZoomRangePageComponent implements AfterViewInit {
 
     this.map.on('move', (ev) => {
       this.currentLngLat = this.map!.getCenter()
-      const { lng, lat } = this.currentLngLat
+      /* Con esto podriamos sacar por separado las coordenadas
+      const { lng, lat } = this.currentLngLat */
     })
   }
 
