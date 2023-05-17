@@ -88,6 +88,12 @@ export class MarkersPageComponent {
 
     this.markers.push({ color, marker })
     this.saveToLocalStorage()
+
+    // Vamos a crear un listener para que, cada vez que se mueva un marcador, se actualice
+    marker.on('dragend', () =>
+      // Podemos hacerlo así ya que se está guardando el arreglo por referencia
+      this.saveToLocalStorage()
+    )
   }
 
   /**
